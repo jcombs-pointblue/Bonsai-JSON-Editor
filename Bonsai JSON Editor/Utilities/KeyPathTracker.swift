@@ -2,10 +2,10 @@ import Foundation
 
 /// Utility for formatting and parsing JSON key paths
 enum KeyPathTracker {
-    /// Format a path as a human-readable string like "users[0].address.city"
+    /// Format a path as a jq-compatible string like ".users[0].address.city"
     static func format(_ path: [JSONPathComponent]) -> String {
-        if path.isEmpty { return "$" }
-        var result = "$"
+        if path.isEmpty { return "." }
+        var result = ""
         for component in path {
             switch component {
             case .key(let k):
@@ -13,7 +13,7 @@ enum KeyPathTracker {
                 if isSimpleIdentifier(k) {
                     result += ".\(k)"
                 } else {
-                    result += "[\"\(k)\"]"
+                    result += ".[\".\(k)\"]"
                 }
             case .index(let i):
                 result += "[\(i)]"

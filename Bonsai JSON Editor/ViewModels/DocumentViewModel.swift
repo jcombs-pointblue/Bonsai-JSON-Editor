@@ -23,8 +23,8 @@ class DocumentViewModel {
     // MARK: - Key path display
 
     var formattedKeyPath: String {
-        if selectedKeyPath.isEmpty { return "$" }
-        var result = "$"
+        if selectedKeyPath.isEmpty { return "." }
+        var result = ""
         for component in selectedKeyPath {
             result += component.displayString
         }
