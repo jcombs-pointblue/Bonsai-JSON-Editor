@@ -19,6 +19,8 @@
 			<array>
 				<string>json</string>
 			</array>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
 		</dict>
 	</array>
 </dict>
