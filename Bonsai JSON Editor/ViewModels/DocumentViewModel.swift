@@ -3,7 +3,9 @@ import SwiftUI
 /// ViewModel for a JSON document, managing selection, expansion, query, and editing state.
 @Observable
 class DocumentViewModel {
-    var document: JSONDocument
+    var document: JSONDocument {
+        didSet { onDocumentChanged?(document) }
+    }
     var selectedKeyPath: [JSONPathComponent] = []
     var expandedNodes: Set<[JSONPathComponent]> = []
     var searchText: String = ""
@@ -11,6 +13,9 @@ class DocumentViewModel {
     var queryResults: [JSONNode] = []
     var queryError: String? = nil
     var isQuerying: Bool = false
+
+    /// Called whenever the document is modified by the viewModel, so ContentView can sync back to the binding.
+    var onDocumentChanged: ((JSONDocument) -> Void)?
 
     private var debounceTask: Task<Void, Never>?
 

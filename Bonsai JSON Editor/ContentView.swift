@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var viewModel: DocumentViewModel?
     @State private var queryPanelHeight: CGFloat = 250
     @State private var isQueryPanelVisible: Bool = true
+    @State private var showSourceView: Bool = false
     @State private var searchText: String = ""
 
     var body: some View {
@@ -18,7 +19,8 @@ struct ContentView: View {
                     .onAppear { setupViewModel() }
             }
         }
-        .onChange(of: document.rawText) { _, _ in
+        .onChange(of: document.rawText) { _, newValue in
+            guard viewModel?.document.rawText != newValue else { return }
             viewModel?.document = document
         }
     }
@@ -26,8 +28,10 @@ struct ContentView: View {
     @ViewBuilder
     private func documentContent(_ vm: DocumentViewModel) -> some View {
         VStack(spacing: 0) {
-            // Main content: Tree view or error state
-            if let root = vm.document.root {
+            // Main content: Tree view, source view, or error state
+            if showSourceView {
+                sourceContent(vm)
+            } else if let root = vm.document.root {
                 treeContent(root, vm: vm)
             } else if let error = vm.document.parseError {
                 parseErrorContent(error, vm: vm)
@@ -48,6 +52,13 @@ struct ContentView: View {
         }
         .toolbar {
             DocumentToolbarContent(viewModel: vm)
+
+            ToolbarItem(placement: .automatic) {
+                Toggle(isOn: $showSourceView) {
+                    Label("Source", systemImage: "doc.plaintext")
+                }
+                .help("Toggle between tree view and source text")
+            }
 
             ToolbarItem(placement: .automatic) {
                 Toggle(isOn: $isQueryPanelVisible) {
@@ -139,8 +150,24 @@ struct ContentView: View {
         }
     }
 
+    @ViewBuilder
+    private func sourceContent(_ vm: DocumentViewModel) -> some View {
+        TextEditor(text: Binding(
+            get: { vm.document.rawText },
+            set: { newValue in
+                vm.document.rawText = newValue
+                vm.document.reparse()
+            }
+        ))
+        .font(.system(.body, design: .monospaced))
+    }
+
     private func setupViewModel() {
-        viewModel = DocumentViewModel(document: document)
+        let vm = DocumentViewModel(document: document)
+        vm.onDocumentChanged = { newDoc in
+            document = newDoc
+        }
+        viewModel = vm
     }
 
     private func handleDrop(_ providers: [NSItemProvider]) -> Bool {
