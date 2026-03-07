@@ -837,7 +837,7 @@ struct JQEvaluator {
                 switch name {
                 case "indices": return [.array(foundIndices.map { .number(Double($0)) })]
                 case "index": return [foundIndices.isEmpty ? .null : .number(Double(foundIndices[0]))]
-                case "rindex": return [foundIndices.isEmpty ? .null : .number(Double(foundIndices.last!))]
+                case "rindex": return [foundIndices.last.map { .number(Double($0)) } ?? .null]
                 default: return [.null]
                 }
             } else if case .array(let items) = input {
@@ -850,7 +850,7 @@ struct JQEvaluator {
                 switch name {
                 case "indices": return [.array(foundIndices.map { .number(Double($0)) })]
                 case "index": return [foundIndices.isEmpty ? .null : .number(Double(foundIndices[0]))]
-                case "rindex": return [foundIndices.isEmpty ? .null : .number(Double(foundIndices.last!))]
+                case "rindex": return [foundIndices.last.map { .number(Double($0)) } ?? .null]
                 default: return [.null]
                 }
             }

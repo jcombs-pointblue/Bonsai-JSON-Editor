@@ -308,8 +308,8 @@ extension JSONNode {
             case "\r": result += "\\r"
             case "\t": result += "\\t"
             default:
-                if ch.asciiValue == nil && ch.unicodeScalars.first!.value < 0x20 {
-                    let code = ch.unicodeScalars.first!.value
+                if ch.asciiValue == nil, let scalar = ch.unicodeScalars.first, scalar.value < 0x20 {
+                    let code = scalar.value
                     result += String(format: "\\u%04x", code)
                 } else {
                     result.append(ch)
