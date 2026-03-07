@@ -85,7 +85,7 @@ private struct GettingStartedSection: View {
 
         HelpSubheading("The Interface")
         HelpParagraph("A Bonsai document window has two main areas:")
-        HelpBullet("Tree View (top) \u{2014} an interactive, collapsible outline of your JSON document. Click nodes to select them, expand or collapse objects and arrays, and edit values in place.")
+        HelpBullet("Tree View (top) \u{2014} an interactive, collapsible outline of your JSON document. Click nodes to select them, expand or collapse objects and arrays, and edit values in place. You can switch to a Source View to see and edit the raw JSON text.")
         HelpBullet("Query Panel (bottom) \u{2014} a jq expression bar with live results. Type a jq expression and see results update as you type. Toggle this panel with the terminal button in the toolbar.")
 
         HelpSubheading("Document Types")
@@ -118,6 +118,13 @@ private struct TreeViewSection: View {
 
         HelpSubheading("Key Path")
         HelpParagraph("The key path shown in the toolbar uses jq syntax, so you can paste it directly into the query panel. For example, a path like .config.database.host can be pasted into the jq bar to extract that value.")
+
+        HelpSubheading("Source View")
+        HelpParagraph("Click the Source toggle (document icon) in the toolbar to switch from the tree view to a raw text editor showing the JSON source. In source view you can:")
+        HelpBullet("See the full JSON text, including the effects of Format and Minify.")
+        HelpBullet("Edit the JSON directly as text. Changes are reparsed live and reflected in the tree when you switch back.")
+        HelpBullet("Copy and paste large sections of JSON freely.")
+        HelpParagraph("Click the Source toggle again to return to the tree view.")
     }
 }
 
@@ -223,6 +230,9 @@ private struct ToolbarHelpSection: View {
         HelpSubheading("View Menu")
         HelpBullet("Expand All \u{2014} expands every object and array in the document.")
         HelpBullet("Collapse All \u{2014} collapses everything except the root node.")
+
+        HelpSubheading("Source Toggle")
+        HelpParagraph("The document icon switches between the tree view and a raw JSON text editor. Use this to see the full formatted or minified text, or to edit JSON as source.")
 
         HelpSubheading("Query Panel Toggle")
         HelpParagraph("The terminal icon toggles the jq query panel at the bottom of the window.")
