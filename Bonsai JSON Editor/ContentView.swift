@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var queryPanelHeight: CGFloat = 250
     @State private var isQueryPanelVisible: Bool = true
     @State private var showSourceView: Bool = false
+    @State private var showRawQueryResults: Bool = false
     @State private var searchText: String = ""
 
     var body: some View {
@@ -145,8 +146,8 @@ struct ContentView: View {
                         }
                 )
 
-            QueryBarView(viewModel: vm)
-            QueryResultsView(viewModel: vm)
+            QueryBarView(viewModel: vm, showRawText: $showRawQueryResults)
+            QueryResultsView(viewModel: vm, showRawText: showRawQueryResults)
         }
     }
 

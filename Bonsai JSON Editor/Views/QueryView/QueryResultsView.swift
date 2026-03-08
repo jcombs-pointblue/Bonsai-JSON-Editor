@@ -3,6 +3,7 @@ import SwiftUI
 /// Displays jq query results as formatted JSON
 struct QueryResultsView: View {
     @Bindable var viewModel: DocumentViewModel
+    var showRawText: Bool
 
     var body: some View {
         Group {
@@ -14,31 +15,10 @@ struct QueryResultsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if !viewModel.queryResults.isEmpty {
-                ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 8) {
-                        ForEach(Array(viewModel.queryResults.enumerated()), id: \.offset) { index, result in
-                            VStack(alignment: .leading, spacing: 4) {
-                                if viewModel.queryResults.count > 1 {
-                                    Text("Result \(index + 1)")
-                                        .font(.caption2)
-                                        .foregroundStyle(.tertiary)
-                                }
-
-                                Text(result.prettyPrinted())
-                                    .font(.system(.body, design: .monospaced))
-                                    .textSelection(.enabled)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-
-                            if index < viewModel.queryResults.count - 1 {
-                                Divider()
-                                    .padding(.horizontal, 12)
-                            }
-                        }
-                    }
-                    .padding(.vertical, 8)
+                if showRawText {
+                    rawTextView
+                } else {
+                    cardListView
                 }
             } else {
                 // Empty state when no query entered
@@ -52,6 +32,49 @@ struct QueryResultsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
+        }
+    }
+
+    private var rawTextView: some View {
+        let text = viewModel.queryResults
+            .map { $0.prettyPrinted() }
+            .joined(separator: "\n")
+
+        return ScrollView {
+            Text(text)
+                .font(.system(.body, design: .monospaced))
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(12)
+        }
+    }
+
+    private var cardListView: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 8) {
+                ForEach(Array(viewModel.queryResults.enumerated()), id: \.offset) { index, result in
+                    VStack(alignment: .leading, spacing: 4) {
+                        if viewModel.queryResults.count > 1 {
+                            Text("Result \(index + 1)")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+
+                        Text(result.prettyPrinted())
+                            .font(.system(.body, design: .monospaced))
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+
+                    if index < viewModel.queryResults.count - 1 {
+                        Divider()
+                            .padding(.horizontal, 12)
+                    }
+                }
+            }
+            .padding(.vertical, 8)
         }
     }
 }

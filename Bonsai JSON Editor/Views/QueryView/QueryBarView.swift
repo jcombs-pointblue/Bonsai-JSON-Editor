@@ -1,9 +1,13 @@
 import SwiftUI
+import AppKit
+import UniformTypeIdentifiers
 
 /// Query input bar with jq expression field and status indicators
 struct QueryBarView: View {
     @Bindable var viewModel: DocumentViewModel
+    @Binding var showRawText: Bool
     @FocusState private var isQueryFieldFocused: Bool
+    @State private var showCopiedFeedback: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -40,6 +44,32 @@ struct QueryBarView: View {
                     Text("\(viewModel.queryResults.count) result\(viewModel.queryResults.count == 1 ? "" : "s")")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+
+                    Button {
+                        copyResults()
+                    } label: {
+                        Label(showCopiedFeedback ? "Copied" : "Copy", systemImage: showCopiedFeedback ? "checkmark" : "doc.on.doc")
+                            .font(.caption)
+                    }
+                    .controlSize(.small)
+                    .help("Copy all results to clipboard")
+
+                    Button {
+                        exportResults()
+                    } label: {
+                        Label("Export", systemImage: "square.and.arrow.up")
+                            .font(.caption)
+                    }
+                    .controlSize(.small)
+                    .help("Save results to a JSON file")
+
+                    Toggle(isOn: $showRawText) {
+                        Label("Text", systemImage: showRawText ? "doc.plaintext" : "list.bullet.rectangle")
+                            .font(.caption)
+                    }
+                    .toggleStyle(.button)
+                    .controlSize(.small)
+                    .help(showRawText ? "Show results as cards" : "Show results as raw text")
                 }
             }
             .padding(.horizontal, 10)
@@ -60,6 +90,38 @@ struct QueryBarView: View {
                 .padding(.horizontal, 10)
                 .padding(.bottom, 4)
             }
+        }
+    }
+
+    private func formattedResults() -> String {
+        let results = viewModel.queryResults
+        if results.count == 1 {
+            return results[0].prettyPrinted()
+        }
+        // Multiple results: output each on its own line, matching jq CLI behavior
+        return results.map { $0.prettyPrinted() }.joined(separator: "\n")
+    }
+
+    private func copyResults() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(formattedResults(), forType: .string)
+        showCopiedFeedback = true
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            showCopiedFeedback = false
+        }
+    }
+
+    private func exportResults() {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.json]
+        panel.nameFieldStringValue = "results.json"
+        panel.canCreateDirectories = true
+
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            let text = formattedResults()
+            try? text.data(using: .utf8)?.write(to: url)
         }
     }
 }
