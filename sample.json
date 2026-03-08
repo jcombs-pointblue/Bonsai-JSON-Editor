@@ -1,0 +1,184 @@
+{
+  "company": "Acme Corp",
+  "founded": 2018,
+  "active": true,
+  "departments": [
+    {
+      "name": "Engineering",
+      "budget": 450000,
+      "headcount": 12
+    },
+    {
+      "name": "Design",
+      "budget": 180000,
+      "headcount": 5
+    },
+    {
+      "name": "Marketing",
+      "budget": 220000,
+      "headcount": 7
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice Chen",
+      "email": "alice@acme.com",
+      "role": "admin",
+      "department": "Engineering",
+      "active": true,
+      "skills": ["Swift", "Python", "Rust"],
+      "projects": [
+        {"name": "Bonsai", "status": "active", "priority": "high"},
+        {"name": "Atlas", "status": "completed", "priority": "medium"}
+      ],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Bob Martinez",
+      "email": "bob@acme.com",
+      "role": "developer",
+      "department": "Engineering",
+      "active": true,
+      "skills": ["JavaScript", "TypeScript", "React"],
+      "projects": [
+        {"name": "Portal", "status": "active", "priority": "high"},
+        {"name": "Bonsai", "status": "active", "priority": "high"},
+        {"name": "Lighthouse", "status": "paused", "priority": "low"}
+      ],
+      "address": {
+        "city": "Austin",
+        "state": "TX",
+        "zip": "73301"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Carol Wright",
+      "email": "carol@acme.com",
+      "role": "designer",
+      "department": "Design",
+      "active": true,
+      "skills": ["Figma", "CSS", "Illustration"],
+      "projects": [
+        {"name": "Bonsai", "status": "active", "priority": "high"}
+      ],
+      "address": {
+        "city": "Portland",
+        "state": "OR",
+        "zip": "97201"
+      }
+    },
+    {
+      "id": 4,
+      "name": "David Park",
+      "email": "david@acme.com",
+      "role": "developer",
+      "department": "Engineering",
+      "active": false,
+      "skills": ["Go", "Kubernetes", "Terraform"],
+      "projects": [
+        {"name": "Atlas", "status": "completed", "priority": "medium"},
+        {"name": "Lighthouse", "status": "paused", "priority": "low"}
+      ],
+      "address": {
+        "city": "Seattle",
+        "state": "WA",
+        "zip": "98101"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Eva Johansson",
+      "email": "eva@acme.com",
+      "role": "manager",
+      "department": "Marketing",
+      "active": true,
+      "skills": ["Analytics", "SEO", "Content Strategy"],
+      "projects": [
+        {"name": "Portal", "status": "active", "priority": "high"},
+        {"name": "Campaign Q2", "status": "active", "priority": "medium"}
+      ],
+      "address": {
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60601"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Frank Nwosu",
+      "email": "frank@acme.com",
+      "role": "developer",
+      "department": "Engineering",
+      "active": true,
+      "skills": ["Python", "Machine Learning", "SQL"],
+      "projects": [
+        {"name": "Atlas", "status": "completed", "priority": "medium"},
+        {"name": "Bonsai", "status": "active", "priority": "high"},
+        {"name": "ML Pipeline", "status": "active", "priority": "high"}
+      ],
+      "address": {
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94107"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "name": "Bonsai",
+      "status": "active",
+      "started": "2025-01-15",
+      "tags": ["tools", "developer-experience", "open-source"]
+    },
+    {
+      "name": "Atlas",
+      "status": "completed",
+      "started": "2024-03-01",
+      "tags": ["infrastructure", "internal"]
+    },
+    {
+      "name": "Portal",
+      "status": "active",
+      "started": "2025-06-10",
+      "tags": ["customer-facing", "web"]
+    },
+    {
+      "name": "Lighthouse",
+      "status": "paused",
+      "started": "2024-11-20",
+      "tags": ["monitoring", "internal"]
+    },
+    {
+      "name": "Campaign Q2",
+      "status": "active",
+      "started": "2026-01-05",
+      "tags": ["marketing", "growth"]
+    },
+    {
+      "name": "ML Pipeline",
+      "status": "active",
+      "started": "2025-09-12",
+      "tags": ["data", "infrastructure", "machine-learning"]
+    }
+  ],
+  "config": {
+    "version": "2.1.0",
+    "features": {
+      "dark_mode": true,
+      "notifications": true,
+      "beta_access": false
+    },
+    "limits": {
+      "max_users": 50,
+      "max_projects": 20,
+      "storage_gb": 100
+    }
+  }
+}
