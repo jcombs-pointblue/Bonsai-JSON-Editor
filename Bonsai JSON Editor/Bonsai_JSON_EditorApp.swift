@@ -16,6 +16,13 @@ struct Bonsai_JSON_EditorApp: App {
                     openWindow(id: "help")
                 }
                 .keyboardShortcut("?", modifiers: .command)
+
+                Divider()
+
+                Button("jq Tutorial") {
+                    openWindow(id: "jq-tutorial")
+                }
+                .keyboardShortcut("t", modifiers: [.command, .shift])
             }
         }
 
@@ -23,5 +30,10 @@ struct Bonsai_JSON_EditorApp: App {
             HelpView()
         }
         .defaultSize(width: 800, height: 600)
+
+        Window("jq Tutorial", id: "jq-tutorial") {
+            TutorialView()
+        }
+        .defaultSize(width: 1000, height: 700)
     }
 }

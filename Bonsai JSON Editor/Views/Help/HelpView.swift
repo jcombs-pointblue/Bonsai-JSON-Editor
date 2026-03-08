@@ -204,6 +204,8 @@ private struct QueryPanelSection: View {
         HelpCode(".[] | select(.active == true)", description: "Filter for elements where active is true.")
 
         HelpParagraph("See the jq Reference section for comprehensive syntax documentation.")
+
+        HelpParagraph("For a hands-on learning experience, open the interactive jq Tutorial from the Help menu (\u{21E7}\u{2318}T) to practice with sample data.")
     }
 }
 
