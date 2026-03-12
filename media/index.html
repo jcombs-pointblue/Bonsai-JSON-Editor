@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonsai JSON Editor for macOS</title>
+    <style>
+        :root {
+            --green-dark: #1a3a2a;
+            --green-mid: #2d6a4f;
+            --green-light: #52b788;
+            --green-pale: #b7e4c7;
+            --green-faint: #d8f3dc;
+            --bark: #5c4033;
+            --bark-light: #8b6f47;
+            --bg-dark: #0d1b12;
+            --bg-card: #142119;
+            --text-primary: #e8f5e9;
+            --text-secondary: #a5c4ad;
+            --text-muted: #6b8f74;
+            --accent-orange: #e09f3e;
+            --accent-blue: #5fa8d3;
+            --code-bg: #0a1610;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 80px 24px 60px;
+            background: linear-gradient(180deg, #0a1610 0%, var(--bg-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(82,183,136,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 24px rgba(82,183,136,0.3));
+        }
+
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--green-light), var(--green-pale));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 22px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .hero .subtitle {
+            font-size: 17px;
+            color: var(--text-muted);
+            max-width: 620px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--green-mid), var(--green-light));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(82,183,136,0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(82,183,136,0.4);
+        }
+
+        .cta-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 40px 24px 80px;
+            text-align: center;
+        }
+
+        .video-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(82,183,136,0.15);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Section */
+        .section {
+            padding: 80px 24px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(82,183,136,0.1);
+            border-radius: 16px;
+            padding: 32px;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(82,183,136,0.3);
+            transform: translateY(-2px);
+        }
+
+        .feature-card .icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--green-pale);
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* Screenshot Showcase */
+        .screenshot-section {
+            padding: 80px 24px;
+        }
+
+        .screenshot-row {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            max-width: 1080px;
+            margin: 0 auto 72px;
+        }
+
+        .screenshot-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .screenshot-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .screenshot-image {
+            flex: 1.2;
+            min-width: 0;
+        }
+
+        .screenshot-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06);
+        }
+
+        .screenshot-text {
+            flex: 0.8;
+            min-width: 0;
+        }
+
+        .screenshot-text .label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--green-light);
+            margin-bottom: 8px;
+        }
+
+        .screenshot-text h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+        }
+
+        .screenshot-text p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* jq Feature Section */
+        .jq-section {
+            padding: 80px 24px;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, #0a1610 50%, var(--bg-dark) 100%);
+        }
+
+        .jq-columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .jq-col h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--green-light);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(82,183,136,0.15);
+        }
+
+        .jq-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .jq-col li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 4px 0;
+            font-family: "SF Mono", SFMono-Regular, Menlo, monospace;
+        }
+
+        .jq-col li code {
+            color: var(--green-pale);
+            background: var(--code-bg);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 48px 24px;
+            border-top: 1px solid rgba(82,183,136,0.1);
+        }
+
+        footer p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer .links {
+            margin-top: 12px;
+        }
+
+        footer .links a {
+            margin: 0 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .hero .tagline { font-size: 18px; }
+            .section-header h2 { font-size: 28px; }
+            .screenshot-row,
+            .screenshot-row:nth-child(even) {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .jq-columns {
+                grid-template-columns: 1fr;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-icon">&#127794;</div>
+        <h1>Bonsai</h1>
+        <p class="tagline">JSON Editor for macOS</p>
+        <p class="subtitle">
+            A native JSON viewer, editor, and query tool with a built-in jq engine.
+            Explore your data as an interactive tree, transform it with jq expressions,
+            and learn as you go with an integrated tutorial.
+        </p>
+        <a href="https://apps.apple.com/app/bonsai-json-editor" class="cta-button">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Download on the Mac App Store
+        </a>
+    </section>
+
+    <!-- Video -->
+    <section class="video-section">
+        <div class="container">
+            <div class="video-wrapper">
+                <video autoplay muted loop playsinline>
+                    <source src="BonsaiAppStore1.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Carefully crafted for JSON</h2>
+                <p>Everything you need to view, edit, query, and understand JSON data &mdash; in one native Mac app.</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="icon">&#127795;</span>
+                    <h3>Interactive Tree View</h3>
+                    <p>Explore JSON as a collapsible, color-coded tree. Strings, numbers, booleans, and null are visually distinct. Container nodes show child counts. Click any node to see its full key path.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">&#9000;</span>
+                    <h3>Built-in jq Engine</h3>
+                    <p>A complete jq query engine runs locally, right inside the app. Filter, transform, aggregate, and reshape your JSON with live results as you type. No terminal required.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">&#9998;</span>
+                    <h3>Inline Editing</h3>
+                    <p>Double-click any value to edit it in place. Bonsai automatically detects the type. Full undo/redo support keeps your changes safe. Switch to source view for raw text editing.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">&#128270;</span>
+                    <h3>Search &amp; Filter</h3>
+                    <p>Live search filters the tree as you type, matching key names and values. Parent nodes stay visible so you never lose structural context in large documents.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">&#127891;</span>
+                    <h3>Interactive Tutorial</h3>
+                    <p>Learn jq hands-on with 40+ guided lessons across 9 categories. Each step explains a concept, lets you run a query against sample data, and tracks your progress.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="icon">&#128196;</span>
+                    <h3>Export &amp; Copy</h3>
+                    <p>Copy query results to the clipboard or export them to a JSON file. Copy any node's key path for use in your own code. Format or minify the entire document with one click.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="screenshot-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>See it in action</h2>
+            </div>
+
+            <div class="screenshot-row">
+                <div class="screenshot-image">
+                    <img src="Screenshot 2026-03-08 at 19.33.13.png" alt="Bonsai tree view showing color-coded JSON with expanded nodes and query panel">
+                </div>
+                <div class="screenshot-text">
+                    <div class="label">Tree View</div>
+                    <h3>Your JSON, organized</h3>
+                    <p>Bonsai renders every JSON file as a navigable tree. Values are color-coded &mdash; green for strings, blue for numbers, orange for booleans. Expand and collapse objects and arrays to focus on the data that matters. The toolbar shows the jq key path to your selection.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-row">
+                <div class="screenshot-image">
+                    <img src="Screenshot 2026-03-09 at 09.02.33.png" alt="Source view showing raw JSON text with monospaced font">
+                </div>
+                <div class="screenshot-text">
+                    <div class="label">Source View</div>
+                    <h3>Raw JSON when you need it</h3>
+                    <p>Toggle to a full text editor to see formatted or minified JSON. Edit directly as source text &mdash; changes reparse live and sync back to the tree. Use Format and Minify to reshape the text in one click.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-row">
+                <div class="screenshot-image">
+                    <img src="Screenshot 2026-03-08 at 19.29.26.png" alt="Interactive jq tutorial showing step-by-step lessons with live query results">
+                </div>
+                <div class="screenshot-text">
+                    <div class="label">jq Tutorial</div>
+                    <h3>Learn by doing</h3>
+                    <p>New to jq? The built-in tutorial walks you through 40+ lessons &mdash; from basic field access to complex multi-step pipelines. Each lesson explains the concept, provides an editable query, and lets you run it against real sample data with a single click.</p>
+                </div>
+            </div>
+
+            <div class="screenshot-row">
+                <div class="screenshot-image">
+                    <img src="Screenshot 2026-03-08 at 19.30.14.png" alt="jq reference documentation showing builtin functions with examples">
+                </div>
+                <div class="screenshot-text">
+                    <div class="label">Reference</div>
+                    <h3>Documentation at your fingertips</h3>
+                    <p>A comprehensive jq reference covers every supported filter, operator, and builtin function with clear examples. Feature documentation, keyboard shortcuts, and usage guides are always one click away.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jq Deep Dive -->
+    <section class="jq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>A complete jq engine, built in</h2>
+                <p>80+ builtin functions. No dependencies, no terminal, no setup. Just type a query and see results.</p>
+            </div>
+            <div class="jq-columns">
+                <div class="jq-col">
+                    <h4>Filtering &amp; Selection</h4>
+                    <ul>
+                        <li><code>select()</code> &mdash; filter by condition</li>
+                        <li><code>map()</code> &mdash; transform elements</li>
+                        <li><code>sort_by()</code> &mdash; sort by field</li>
+                        <li><code>group_by()</code> &mdash; group elements</li>
+                        <li><code>unique_by()</code> &mdash; deduplicate</li>
+                        <li><code>flatten</code> &mdash; flatten arrays</li>
+                        <li><code>first</code> / <code>last</code></li>
+                        <li><code>limit()</code> / <code>nth()</code></li>
+                        <li><code>range()</code> &mdash; generate sequences</li>
+                    </ul>
+                </div>
+                <div class="jq-col">
+                    <h4>Objects &amp; Strings</h4>
+                    <ul>
+                        <li><code>keys</code> / <code>values</code> / <code>has()</code></li>
+                        <li><code>to_entries</code> / <code>from_entries</code></li>
+                        <li><code>with_entries()</code></li>
+                        <li><code>contains()</code> / <code>inside()</code></li>
+                        <li><code>del()</code> &mdash; remove fields</li>
+                        <li><code>split()</code> / <code>join()</code></li>
+                        <li><code>test()</code> / <code>match()</code> &mdash; regex</li>
+                        <li><code>sub()</code> / <code>gsub()</code> &mdash; replace</li>
+                        <li><code>startswith()</code> / <code>endswith()</code></li>
+                    </ul>
+                </div>
+                <div class="jq-col">
+                    <h4>Aggregation &amp; Math</h4>
+                    <ul>
+                        <li><code>add</code> / <code>length</code></li>
+                        <li><code>min</code> / <code>max</code></li>
+                        <li><code>min_by()</code> / <code>max_by()</code></li>
+                        <li><code>any()</code> / <code>all()</code></li>
+                        <li><code>abs</code> / <code>floor</code> / <code>ceil</code></li>
+                        <li><code>sqrt</code> / <code>round</code></li>
+                        <li><code>type</code> &mdash; value type</li>
+                        <li><code>tojson</code> / <code>fromjson</code></li>
+                        <li><code>if-then-else</code> / <code>try-catch</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Point Blue Technology. All rights reserved.</p>
+        <p class="links">
+            <a href="privacy.html">Privacy Policy</a>
+        </p>
+    </footer>
+
+</body>
+</html>

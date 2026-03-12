@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy &mdash; Bonsai JSON Editor</title>
+    <style>
+        :root {
+            --green-dark: #1a3a2a;
+            --green-mid: #2d6a4f;
+            --green-light: #52b788;
+            --green-pale: #b7e4c7;
+            --bg-dark: #0d1b12;
+            --bg-card: #142119;
+            --text-primary: #e8f5e9;
+            --text-secondary: #a5c4ad;
+            --text-muted: #6b8f74;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 24px 40px;
+            border-bottom: 1px solid rgba(82,183,136,0.1);
+        }
+
+        header .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+            color: var(--green-pale);
+        }
+
+        header p {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        header a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--green-pale);
+            margin-top: 40px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(82,183,136,0.1);
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        ul {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .effective-date {
+            display: inline-block;
+            background: var(--bg-card);
+            border: 1px solid rgba(82,183,136,0.1);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px 24px;
+            border-top: 1px solid rgba(82,183,136,0.1);
+        }
+
+        footer p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--green-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="icon">&#127794;</div>
+        <h1>Privacy Policy</h1>
+        <p>Bonsai JSON Editor &mdash; <a href="index.html">Back to home</a></p>
+    </header>
+
+    <main>
+        <div class="effective-date">Effective date: March 9, 2026</div>
+
+        <h2>Overview</h2>
+        <p>Bonsai JSON Editor ("Bonsai", "the app") is a native macOS application developed by Point Blue Technology. Your privacy is important to us. This policy explains what data Bonsai does and does not collect.</p>
+        <p><strong>The short version: Bonsai does not collect, transmit, or store any of your personal data or file contents. Everything stays on your Mac.</strong></p>
+
+        <h2>Data Collection</h2>
+        <p>Bonsai does not collect any data. Specifically:</p>
+        <ul>
+            <li><strong>No personal information</strong> is collected, requested, or stored.</li>
+            <li><strong>No file contents</strong> are transmitted off your device. All JSON files you open, edit, and query are processed entirely on your Mac.</li>
+            <li><strong>No analytics or telemetry</strong> are collected. Bonsai does not include any analytics frameworks, crash reporting services, or usage tracking.</li>
+            <li><strong>No network requests</strong> are made by the app. Bonsai operates entirely offline and does not communicate with any server.</li>
+            <li><strong>No cookies or identifiers</strong> are used.</li>
+        </ul>
+
+        <h2>Local Data Storage</h2>
+        <p>Bonsai stores data only as part of normal macOS document handling:</p>
+        <ul>
+            <li><strong>JSON files</strong> are read from and saved to locations you choose on your file system. Bonsai accesses files only through the standard macOS document system and sandboxed file access.</li>
+            <li><strong>Application preferences</strong> such as window size and position may be stored locally by the macOS system using standard UserDefaults. These never leave your device.</li>
+            <li><strong>Recent documents</strong> are managed by macOS itself through the standard NSDocumentController. Bonsai does not maintain its own history.</li>
+        </ul>
+
+        <h2>Third-Party Services</h2>
+        <p>Bonsai does not integrate with, connect to, or share data with any third-party services, APIs, frameworks, or SDKs.</p>
+
+        <h2>Query Processing</h2>
+        <p>The built-in jq query engine processes all expressions locally on your Mac. Queries and their results are never transmitted anywhere. Tutorial sample data is embedded directly in the application bundle.</p>
+
+        <h2>Children's Privacy</h2>
+        <p>Bonsai does not collect personal information from anyone, including children under 13. The app contains no account creation, social features, or data collection of any kind.</p>
+
+        <h2>App Store</h2>
+        <p>Bonsai is distributed through the Mac App Store. Apple may collect data related to your purchase and download as described in <a href="https://www.apple.com/legal/privacy/" style="color: var(--green-light);">Apple's Privacy Policy</a>. Point Blue Technology does not have access to any purchase or download data that identifies individual users.</p>
+
+        <h2>Changes to This Policy</h2>
+        <p>If this privacy policy is updated, the revised version will be posted on this page with an updated effective date. Because Bonsai does not collect data, changes are expected to be infrequent and minor.</p>
+
+        <h2>Contact</h2>
+        <p>If you have questions about this privacy policy or about Bonsai, you can reach us at:</p>
+        <p><strong>Point Blue Technology</strong><br>
+        Email: support@pointbluetech.com</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Point Blue Technology. All rights reserved.</p>
+        <p><a href="index.html">Bonsai JSON Editor</a></p>
+    </footer>
+
+</body>
+</html>
