@@ -298,13 +298,17 @@ struct JQParserTests {
 
 struct JQEvaluatorTests {
 
-    let simpleObject = try! JSONParser.parse("""
-    {"name": "Alice", "age": 30}
-    """)
+    let simpleObject: JSONNode
+    let usersObject: JSONNode
 
-    let usersObject = try! JSONParser.parse("""
-    {"users": [{"name": "Alice"}, {"name": "Bob"}]}
-    """)
+    init() throws {
+        simpleObject = try JSONParser.parse("""
+        {"name": "Alice", "age": 30}
+        """)
+        usersObject = try JSONParser.parse("""
+        {"users": [{"name": "Alice"}, {"name": "Bob"}]}
+        """)
+    }
 
     // --- Basic tests ---
 
@@ -511,12 +515,9 @@ struct JQEvaluatorTests {
     // --- Null arithmetic ---
 
     @Test func evalNullAddition() throws {
-        let results = try JQEvaluator.evaluate(expression: "null + 1", input: .null)
-        // In jq, null + 1 == 1 — but our parser parses `null` as keyword, need literal
-        // Actually this needs: .x + 1 where .x is null
         let input = JSONNode.object(["x": .null], orderedKeys: ["x"])
-        let results2 = try JQEvaluator.evaluate(expression: ".x + 1", input: input)
-        #expect(results2 == [.number(1)])
+        let results = try JQEvaluator.evaluate(expression: ".x + 1", input: input)
+        #expect(results == [.number(1)])
     }
 
     // --- Select ---
