@@ -96,21 +96,27 @@ class TutorialViewModel {
         queryResults = []
         queryError = nil
 
-        Task { @MainActor in
-            let input = sampleNode
-            do {
-                let results = try JQEvaluator.evaluate(expression: queryText, input: input)
-                queryResults = results
-                queryError = nil
-                if let step = selectedStep {
-                    completedStepIDs.insert(step.id)
+        let input = sampleNode
+        Task {
+            let result: Result<[JSONNode], Error> = await Task.detached {
+                Result { try JQEvaluator.evaluate(expression: queryText, input: input) }
+            }.value
+
+            await MainActor.run {
+                switch result {
+                case .success(let results):
+                    queryResults = results
+                    queryError = nil
+                    if let step = selectedStep {
+                        completedStepIDs.insert(step.id)
+                    }
+                case .failure(let error):
+                    queryResults = []
+                    queryError = error.localizedDescription
                 }
-            } catch {
-                queryResults = []
-                queryError = error.localizedDescription
+                isRunning = false
+                hasRunCurrentStep = true
             }
-            isRunning = false
-            hasRunCurrentStep = true
         }
     }
 

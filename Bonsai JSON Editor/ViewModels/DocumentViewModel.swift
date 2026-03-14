@@ -17,7 +17,11 @@ class DocumentViewModel {
     /// Called whenever the document is modified by the viewModel, so ContentView can sync back to the binding.
     var onDocumentChanged: ((JSONDocument) -> Void)?
 
-    private var debounceTask: Task<Void, Never>?
+    private nonisolated(unsafe) var debounceTask: Task<Void, Never>?
+
+    deinit {
+        debounceTask?.cancel()
+    }
 
     init(document: JSONDocument) {
         self.document = document
@@ -146,24 +150,30 @@ class DocumentViewModel {
             return
         }
 
-        debounceTask = Task { @MainActor in
+        debounceTask = Task {
             try? await Task.sleep(for: .milliseconds(300))
             guard !Task.isCancelled else { return }
 
-            isQuerying = true
-            let inputRoot = document.root ?? .null
+            await MainActor.run { isQuerying = true }
+            let inputRoot = await document.root ?? .null
 
-            do {
-                let results = try JQEvaluator.evaluate(expression: text, input: inputRoot)
-                guard !Task.isCancelled else { return }
-                queryResults = results
-                queryError = nil
-            } catch {
-                guard !Task.isCancelled else { return }
-                queryResults = []
-                queryError = error.localizedDescription
+            let result: Result<[JSONNode], Error> = await Task.detached {
+                Result { try JQEvaluator.evaluate(expression: text, input: inputRoot) }
+            }.value
+
+            guard !Task.isCancelled else { return }
+
+            await MainActor.run {
+                switch result {
+                case .success(let results):
+                    queryResults = results
+                    queryError = nil
+                case .failure(let error):
+                    queryResults = []
+                    queryError = error.localizedDescription
+                }
+                isQuerying = false
             }
-            isQuerying = false
         }
     }
 }

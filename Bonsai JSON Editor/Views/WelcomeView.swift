@@ -85,22 +85,13 @@ struct WelcomeView: View {
 
     private func pasteFromClipboard() {
         guard let string = NSPasteboard.general.string(forType: .string) else { return }
-        // Create a new document with clipboard content
         let controller = NSDocumentController.shared
-        controller.newDocument(nil)
-
-        // Get the newly created document and set its content
-        Task { @MainActor in
-            try? await Task.sleep(for: .milliseconds(100))
-            if controller.currentDocument is NSDocument {
-                // Post notification with clipboard content
-                NotificationCenter.default.post(
-                    name: .pasteClipboardContent,
-                    object: nil,
-                    userInfo: ["content": string]
-                )
-            }
-        }
+        guard let _ = try? controller.openUntitledDocumentAndDisplay(true) else { return }
+        NotificationCenter.default.post(
+            name: .pasteClipboardContent,
+            object: nil,
+            userInfo: ["content": string]
+        )
     }
 }
 

@@ -7,6 +7,7 @@ struct QueryBarView: View {
     @Binding var showRawText: Bool
     @FocusState private var isQueryFieldFocused: Bool
     @State private var showCopiedFeedback: Bool = false
+    @State private var feedbackTask: Task<Void, Never>?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -105,9 +106,12 @@ struct QueryBarView: View {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(formattedResults(), forType: .string)
         showCopiedFeedback = true
-        Task {
+        feedbackTask?.cancel()
+        feedbackTask = Task {
             try? await Task.sleep(for: .seconds(1.5))
-            showCopiedFeedback = false
+            if !Task.isCancelled {
+                showCopiedFeedback = false
+            }
         }
     }
 
