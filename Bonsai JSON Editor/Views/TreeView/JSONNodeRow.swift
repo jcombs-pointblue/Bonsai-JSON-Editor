@@ -30,10 +30,11 @@ struct JSONNodeRow: View {
 
             // Value
             if isEditing {
-                TextField("Value", text: $editText, onCommit: commitEdit)
+                TextField("Value", text: $editText)
                     .textFieldStyle(.plain)
                     .font(.system(.body, design: .monospaced))
                     .frame(minWidth: 80)
+                    .onSubmit { commitEdit() }
                     .onExitCommand { isEditing = false }
             } else {
                 JSONValueLabel(node: node)
@@ -42,6 +43,9 @@ struct JSONNodeRow: View {
                             beginEditing()
                         }
                     }
+                    .accessibilityAction(.default) {
+                        if node.isLeaf { beginEditing() }
+                    }
             }
 
             Spacer()
@@ -49,7 +53,7 @@ struct JSONNodeRow: View {
             // Child count badge for containers
             if node.isContainer {
                 Text(node.childCount == 1 ? "1 item" : "\(node.childCount) items")
-                    .font(.caption2)
+                    .font(.caption)
                     .foregroundStyle(.tertiary)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
@@ -60,6 +64,8 @@ struct JSONNodeRow: View {
         .onTapGesture {
             viewModel.selectNode(at: path)
         }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(label ?? node.typeName)
     }
 
     private func beginEditing() {

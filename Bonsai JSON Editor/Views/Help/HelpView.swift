@@ -278,7 +278,7 @@ struct HelpSectionHeader: View {
     var body: some View {
         Label(title, systemImage: icon)
             .font(.title)
-            .fontWeight(.bold)
+            .bold()
             .padding(.bottom, 16)
     }
 }

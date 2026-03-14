@@ -1,5 +1,4 @@
 import SwiftUI
-import AppKit
 import UniformTypeIdentifiers
 
 /// Query input bar with jq expression field and status indicators
@@ -121,7 +120,11 @@ struct QueryBarView: View {
         panel.begin { response in
             guard response == .OK, let url = panel.url else { return }
             let text = formattedResults()
-            try? text.data(using: .utf8)?.write(to: url)
+            do {
+                try text.data(using: .utf8)?.write(to: url)
+            } catch {
+                NSAlert(error: error).runModal()
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// ViewModel for a JSON document, managing selection, expansion, query, and editing state.
-@Observable
+@MainActor @Observable
 class DocumentViewModel {
     var document: JSONDocument {
         didSet { onDocumentChanged?(document) }
@@ -153,22 +153,13 @@ class DocumentViewModel {
             isQuerying = true
             let inputRoot = document.root ?? .null
 
-            let result: Result<[JSONNode], Error> = await Task.detached(priority: .userInitiated) {
-                do {
-                    let results = try JQEvaluator.evaluate(expression: text, input: inputRoot)
-                    return .success(results)
-                } catch {
-                    return .failure(error)
-                }
-            }.value
-
-            guard !Task.isCancelled else { return }
-
-            switch result {
-            case .success(let results):
+            do {
+                let results = try JQEvaluator.evaluate(expression: text, input: inputRoot)
+                guard !Task.isCancelled else { return }
                 queryResults = results
                 queryError = nil
-            case .failure(let error):
+            } catch {
+                guard !Task.isCancelled else { return }
                 queryResults = []
                 queryError = error.localizedDescription
             }

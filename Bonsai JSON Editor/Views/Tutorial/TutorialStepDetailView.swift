@@ -49,7 +49,7 @@ struct TutorialStepDetailView: View {
 
                 Text(step.title)
                     .font(.title)
-                    .fontWeight(.bold)
+                    .bold()
             }
 
             Spacer()
@@ -120,14 +120,11 @@ struct TutorialStepDetailView: View {
                     .onSubmit { viewModel.runQuery() }
 
                 if viewModel.editableQuery != step.query {
-                    Button {
-                        viewModel.resetQuery()
-                    } label: {
-                        Image(systemName: "arrow.counterclockwise")
-                            .font(.caption)
-                    }
-                    .help("Reset to original query")
-                    .buttonStyle(.borderless)
+                    Button("Reset Query", systemImage: "arrow.counterclockwise", action: viewModel.resetQuery)
+                        .labelStyle(.iconOnly)
+                        .font(.caption)
+                        .help("Reset to original query")
+                        .buttonStyle(.borderless)
                 }
             }
             .padding(.horizontal, 10)
@@ -200,7 +197,7 @@ struct TutorialStepDetailView: View {
                     ForEach(Array(viewModel.queryResults.enumerated()), id: \.offset) { index, result in
                         if viewModel.queryResults.count > 1 {
                             Text("Result \(index + 1)")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.tertiary)
                         }
                         Text(result.prettyPrinted())

@@ -937,7 +937,7 @@ private struct JQEntry: View {
                     HStack(alignment: .top, spacing: 16) {
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Input")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.tertiary)
                             Text(example.input)
                                 .font(.system(.caption, design: .monospaced))
@@ -947,7 +947,7 @@ private struct JQEntry: View {
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Expression")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.tertiary)
                             Text(example.expression)
                                 .font(.system(.caption, design: .monospaced))
@@ -957,7 +957,7 @@ private struct JQEntry: View {
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Output")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.tertiary)
                             Text(example.output)
                                 .font(.system(.caption, design: .monospaced))

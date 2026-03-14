@@ -56,7 +56,7 @@ struct QueryResultsView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         if viewModel.queryResults.count > 1 {
                             Text("Result \(index + 1)")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.tertiary)
                         }
 

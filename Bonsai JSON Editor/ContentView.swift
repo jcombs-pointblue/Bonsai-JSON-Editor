@@ -10,6 +10,8 @@ struct ContentView: View {
     @State private var showSourceView: Bool = false
     @State private var showRawQueryResults: Bool = false
     @State private var searchText: String = ""
+    @State private var sourceText: String = ""
+    @State private var errorText: String = ""
 
     var body: some View {
         Group {
@@ -112,14 +114,14 @@ struct ContentView: View {
             .background(.red.opacity(0.1))
 
             // Raw text editor
-            TextEditor(text: Binding(
-                get: { vm.document.rawText },
-                set: { newValue in
+            TextEditor(text: $errorText)
+                .font(.system(.body, design: .monospaced))
+                .onAppear { errorText = vm.document.rawText }
+                .onChange(of: errorText) { _, newValue in
+                    guard vm.document.rawText != newValue else { return }
                     vm.document.rawText = newValue
                     document.rawText = newValue
                 }
-            ))
-            .font(.system(.body, design: .monospaced))
         }
     }
 
@@ -153,14 +155,18 @@ struct ContentView: View {
 
     @ViewBuilder
     private func sourceContent(_ vm: DocumentViewModel) -> some View {
-        TextEditor(text: Binding(
-            get: { vm.document.rawText },
-            set: { newValue in
+        TextEditor(text: $sourceText)
+            .font(.system(.body, design: .monospaced))
+            .onAppear { sourceText = vm.document.rawText }
+            .onChange(of: sourceText) { _, newValue in
+                guard vm.document.rawText != newValue else { return }
                 vm.document.rawText = newValue
                 vm.document.reparse()
             }
-        ))
-        .font(.system(.body, design: .monospaced))
+            .onChange(of: vm.document.rawText) { _, newValue in
+                guard sourceText != newValue else { return }
+                sourceText = newValue
+            }
     }
 
     private func setupViewModel() {
@@ -175,7 +181,7 @@ struct ContentView: View {
         guard let provider = providers.first else { return false }
         _ = provider.loadObject(ofClass: URL.self) { url, error in
             guard let url = url, error == nil else { return }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 NSDocumentController.shared.openDocument(
                     withContentsOf: url,
                     display: true

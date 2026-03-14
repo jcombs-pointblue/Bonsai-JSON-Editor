@@ -10,10 +10,11 @@ struct WelcomeView: View {
             Image(systemName: "tree.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(.green.gradient)
+                .accessibilityHidden(true)
 
             Text("Bonsai")
                 .font(.largeTitle)
-                .fontWeight(.bold)
+                .bold()
 
             Text("JSON Viewer, Editor & Query Tool")
                 .font(.title3)
@@ -89,8 +90,9 @@ struct WelcomeView: View {
         controller.newDocument(nil)
 
         // Get the newly created document and set its content
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let doc = controller.currentDocument as? NSDocument {
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(100))
+            if controller.currentDocument is NSDocument {
                 // Post notification with clipboard content
                 NotificationCenter.default.post(
                     name: .pasteClipboardContent,

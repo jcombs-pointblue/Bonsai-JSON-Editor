@@ -63,7 +63,7 @@ struct TutorialView: View {
         let isCompleted = viewModel.completedStepIDs.contains(step.id)
         HStack {
             Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(isCompleted ? .green : .gray.opacity(0.4))
+                .foregroundStyle(isCompleted ? Color.green : Color.gray.opacity(0.4))
                 .font(.caption)
             Text(step.title)
                 .lineLimit(1)

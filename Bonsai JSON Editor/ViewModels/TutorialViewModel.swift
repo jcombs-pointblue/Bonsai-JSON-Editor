@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// View model managing the interactive tutorial state
-@Observable
+@MainActor @Observable
 class TutorialViewModel {
     /// The sample data parsed into a JSONNode (computed once from TutorialContent)
     let sampleNode: JSONNode = TutorialContent.sampleNode
@@ -45,7 +45,7 @@ class TutorialViewModel {
     /// Completion count for the current category
     var completedCountInCategory: Int {
         guard let category = selectedCategory else { return 0 }
-        return category.steps.filter { completedStepIDs.contains($0.id) }.count
+        return category.steps.count(where: { completedStepIDs.contains($0.id) })
     }
 
     /// Navigate to a specific step
